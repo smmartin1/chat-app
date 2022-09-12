@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, Text, TextInput, ImageBackground, TouchableOpacity } from 'react-native';
 
-export default class Start extends React.Component {
+export class Start extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
