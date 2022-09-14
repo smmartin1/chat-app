@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Platform, KeyboardAvoidingView, Alert, TouchableOpacity } from 'react-native';
-import { GiftedChat } from 'react-native-gifted-chat';
+import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
-export class Chat extends React.Component {
+export default class Chat extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -20,7 +20,7 @@ export class Chat extends React.Component {
       messages: [
         {
           _id: 1,
-          text: 'Hello',
+          text: 'Hello, ' + name,
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -30,16 +30,12 @@ export class Chat extends React.Component {
         },
         {
           _id: 2,
-          text: 'System message',
+          text: name + ' has entered the chat',
           createdAt: new Date(),
           system: true
         }
       ],
     })
-  }
-
-  alertMyText(input = []) {
-    Alert.alert(input.text);
   }
 
   onSend(messages = []) {
@@ -65,7 +61,7 @@ export class Chat extends React.Component {
     let color = this.props.route.params.color;  //Background Color
 
     return(
-      <View style={{flex:1, alignItems: 'center', justifyContent:'center', backgroundColor: color}}>
+      <View style={{flex:1, backgroundColor: color}}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
           messages={this.state.messages}
@@ -74,27 +70,13 @@ export class Chat extends React.Component {
             _id: 1,
           }}
         />
-
-        <TextInput
-          style={styles.message}
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
-          placeholder='Type here...'
-        />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {this.alertMyText({text: this.state.text})}}
-        >
-          <Text style={{fontSize: 16, color: 'black'}}>Enter</Text>
-        </TouchableOpacity>
-
         { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
       </View>
     )
   }
 }
 
+/*
 const styles = StyleSheet.create({
   message: {
     height: 40,
@@ -113,3 +95,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   }
 })
+*/
