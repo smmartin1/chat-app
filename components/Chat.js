@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TextInput, Button, Alert, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Platform, KeyboardAvoidingView } from 'react-native';
+import { GiftedChat, Bubble } from 'react-native-gifted-chat';
 
 export default class Chat extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      text: ''
+      text: '',
+      messages: [],
     }
   }
 
@@ -13,35 +15,68 @@ export default class Chat extends React.Component {
     //Name choosen
     let name = this.props.route.params.name;
     this.props.navigation.setOptions({ title: name });
+
+    this.setState({
+      messages: [
+        {
+          _id: 1,
+          text: 'Hello, ' + name,
+          createdAt: new Date(),
+          user: {
+            _id: 2,
+            name: 'React Native',
+            avatar: 'https://placeimg.com/140/140/any',
+          },
+        },
+        {
+          _id: 2,
+          text: name + ' has entered the chat',
+          createdAt: new Date(),
+          system: true
+        }
+      ],
+    })
   }
 
-  alertMyText(input = []) {
-    Alert.alert(input.text);
+  onSend(messages = []) {
+   this.setState(previousState => ({
+     messages: GiftedChat.append(previousState.messages, messages),
+   }))
+  }
+
+  renderBubble(props) {
+    return(
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#000'
+          }
+        }}
+      />
+    )
   }
 
   render() {
     let color = this.props.route.params.color;  //Background Color
 
     return(
-      <View style={{flex:1, alignItems: 'center', justifyContent:'center', backgroundColor: color}}>
-        <TextInput
-          style={styles.message}
-          onChangeText={(text) => this.setState({text})}
-          value={this.state.text}
-          placeholder='Type here...'
+      <View style={{flex:1, backgroundColor: color}}>
+        <GiftedChat
+          renderBubble={this.renderBubble.bind(this)}
+          messages={this.state.messages}
+          onSend={messages => this.onSend(messages)}
+          user={{
+            _id: 1,
+          }}
         />
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {this.alertMyText({text: this.state.text})}}
-        >
-          <Text style={{fontSize: 16, color: 'black'}}>Enter</Text>
-        </TouchableOpacity>
+        { Platform.OS === 'android' ? <KeyboardAvoidingView behavior="height" /> : null }
       </View>
     )
   }
 }
 
+/*
 const styles = StyleSheet.create({
   message: {
     height: 40,
@@ -60,3 +95,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   }
 })
+*/
