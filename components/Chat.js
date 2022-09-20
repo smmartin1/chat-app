@@ -166,6 +166,7 @@ export default class Chat extends React.Component {
       <View style={{flex:1, backgroundColor: color}}>
         <GiftedChat
           renderBubble={this.renderBubble.bind(this)}
+          renderInputToolbar={this.renderInputToolbar.bind(this)}
           messages={this.state.messages}
           onSend={messages => this.onSend(messages)}
           user={{
